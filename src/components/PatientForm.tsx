@@ -1,11 +1,20 @@
 import { useForm } from "react-hook-form"
 import Error from "./Error"
+import type { DraftPatient } from "../types"
+import { usePatienStore } from "../store"
 
 export default function PatientForm() {
-    const { register, handleSubmit, formState: {errors} } = useForm()
+    const { register, handleSubmit, formState: {errors}, reset } = useForm<DraftPatient>()
+    //existen dos formar de definir nuestros store dentro de un componente, 
+    // forma 1 
+        // const store = usePatienStore()
+    // forma 2 (es la forma que sugiere la documentacion)
+    const addPatient = usePatienStore(state => state.addPatient)
 
-    const registerPatien = () => {
-        console.log('Nuevo paciente registrado')
+
+    const registerPatien  = (data: DraftPatient) => {
+       addPatient(data)
+       reset() // para resetear el formulario
     }
     return (
       <div className="md:w-1/2 lg:w-2/5 mx-5">
@@ -36,7 +45,7 @@ export default function PatientForm() {
                     />
                     {errors.name && (
                         <Error>
-                            {errors.name?.message as String}
+                            {errors.name?.message}
                         </Error>
                     )}
                 </div>
@@ -56,7 +65,7 @@ export default function PatientForm() {
                     />
                     {errors.name && (
                         <Error>
-                            {errors.caretaker?.message as String}
+                            {errors.caretaker?.message }
                         </Error>
                     )}
                 </div>
@@ -80,7 +89,7 @@ export default function PatientForm() {
                 />
                  {errors.name && (
                     <Error>
-                        {errors.email?.message as String}
+                        {errors.email?.message}
                     </Error>
                 )}
               </div>
@@ -99,7 +108,7 @@ export default function PatientForm() {
                     />
                     {errors.name && (
                         <Error>
-                            {errors.date?.message as String}
+                            {errors.date?.message}
                         </Error>
                     )}
               </div>
@@ -112,13 +121,13 @@ export default function PatientForm() {
                       id="symptoms"
                       className="w-full p-3  border border-gray-100"  
                       placeholder="Síntomas del paciente" 
-                      {...register('symptoms', {
+                      {...register('symtoms', {
                         required: 'La description del sintoma es obligatoria'
                         })} 
                     />
                     {errors.name && (
                         <Error>
-                            {errors.symptoms?.message as String}
+                            {errors.symtoms?.message as String}
                         </Error>
                     )}
               </div>
